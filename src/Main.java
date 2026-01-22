@@ -1,23 +1,21 @@
-import edu.aitu.oop3.db.DatabaseConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import edu.aitu.oop3.entities.Room;
+import edu.aitu.oop3.repositories.RoomRepository;
+import edu.aitu.oop3.repositories.RoomRepositoryImpl;
+import edu.aitu.oop3.services.RoomService;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Connecting to Supabase...");
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            System.out.println("Connected successfully!");
-            String sql = "SELECT CURRENT_TIMESTAMP";
-            try (PreparedStatement stmt = connection.prepareStatement(sql);
-                 ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    System.out.println("Database time: " + rs.getTimestamp(1));
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Error while connecting to database:");
-            e.printStackTrace();
-        }
+
+        RoomRepository repo = new RoomRepositoryImpl();
+        RoomService service = new RoomService(repo);
+
+        service.addRoom(new Room("Single", 15000, true));
+
+        service.getAllRooms().forEach(r ->
+                System.out.println(r.getId() + " | " + r.getRoomType() + " | " + r.getPrice())
+        );
+
+        Room room = service.getRoom(1);
+        System.out.println("Found room: " + room.getRoomType());
     }
 }
