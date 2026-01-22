@@ -24,3 +24,5 @@ public class Room {
     public double getPrice() { return price; }
     public boolean isAvailable() { return available; }
 }
+// Room entity by Sultan
+
